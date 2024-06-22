@@ -37,7 +37,7 @@ def flip_card():
 def known_card():
     letter_from_data.remove(current_card)
     new_data = pandas.DataFrame(letter_from_data)
-    new_data.to_csv("data/unknown_words.csv")
+    new_data.to_csv("data/unknown_words.csv" , index=False)
     next_card()
 
 window = Tk()
