@@ -4,9 +4,21 @@ import random
 
 BACKGROUND_COLOR = "#B1DDC6"
 
-data = pandas.read_csv("data/french_words.csv")
-letter_from_data = data.to_dict(orient="records")
-current_card = {}
+current_card ={}
+letter_from_data = {}
+
+try:
+    data = pandas.read_csv("data/unknown_words.csv")
+
+except FileNotFoundError:
+    original_data = pandas.read_csv("data/french_words.csv")
+    letter_from_data = original_data.to_dict(orient="records")
+
+else:
+    letter_from_data = data.to_dict(orient="records")
+
+
+
 def next_card():
     global current_card , flip_timer
     window.after_cancel(flip_timer)
@@ -22,6 +34,11 @@ def flip_card():
     canvas.itemconfig(card_background , image = card_back_image )
 
 
+def known_card():
+    letter_from_data.remove(current_card)
+    new_data = pandas.DataFrame(letter_from_data)
+    new_data.to_csv("data/unknown_words.csv")
+    next_card()
 
 window = Tk()
 window.title("Flashy")
@@ -43,7 +60,7 @@ cross_button = Button(image=cross_button_image,bg=BACKGROUND_COLOR , highlightth
 cross_button.grid(row=1,column=0)
 
 check_button_image = PhotoImage(file="images/right.png")
-check_button = Button(image=check_button_image,bg=BACKGROUND_COLOR , highlightthickness=0 , command=next_card)
+check_button = Button(image=check_button_image,bg=BACKGROUND_COLOR , highlightthickness=0 , command=known_card)
 check_button.grid(row=1,column=1)
 
 next_card()
